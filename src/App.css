@@ -1,0 +1,412 @@
+/* General styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.screen {
+  width: 100%;
+  max-width: 800px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.title {
+  font-size: 24px;
+  color: #343a40;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Input and textarea spacing */
+textarea,
+input[type="file"] {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+textarea:focus,
+input[type="file"]:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Thumbnails */
+.thumbnail-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px; /* Space between thumbnails and the file input */
+}
+
+.thumbnail {
+  width: 60px; /* Smaller thumbnails */
+  height: 60px;
+  object-fit: cover;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* Next Button */
+.button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+/* Margin around fields */
+.mockup-uploader input,
+.mockup-uploader textarea {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Screen Descriptions */
+.screen-description {
+  font-size: 16px;
+  color: #6c757d;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Collapsible List */
+/* Collapsible List Container */
+.collapsible-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Artifact Item */
+.artifact-item {
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Artifact Header (Fix Text Style) */
+.artifact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  font-size: 16px;
+  font-weight: bold; /* Make text bold */
+  text-transform: capitalize; /* Capitalize artifact names */
+  color: #333; /* Make it darker for better readability */
+  background-color: transparent; /* Match card background */
+}
+
+/* Buttons inside Header */
+.header-button {
+  background: #ddecf1; /* Gray button background */
+  color: #262323;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.header-button:hover {
+  background: #5a6268; /* Slightly darker gray on hover */
+  color: white;
+}
+
+.header-button.disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Ensure the parent container has proper height */
+.screen {
+  position: relative; /* Necessary for absolute positioning of the button */
+  min-height: 40vh; /* Ensure it takes at least the full viewport height */
+  padding-bottom: 80px; /* Add enough padding for the button to fit */
+}
+
+/* Next Button */
+.button {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  position: absolute; /* Position at the bottom-right */
+  bottom: 20px;
+  right: 20px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+
+
+/* Spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid #0056b3;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Artifact Content */
+.artifact-content {
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.artifact-content textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+/* Artifact Actions */
+.artifact-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Edit Button */
+.edit-button {
+  background-color: #ffc107;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-button:hover {
+  background-color: #e0a800;
+}
+
+/* Save Button */
+.save-button {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #218838;
+}
+
+.save-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Functional Requirements */
+.artifact-item.functional-requirements {
+  background-color: #f9ddf0;
+  border: 1px solid #f9ddf0;
+  color: #333;
+  border-radius: 8px;
+}
+
+/* Epics */
+.artifact-item.epics {
+  background-color: #fec6b7;
+  border: 1px solid #fec6b7;
+  color: #333;
+  border-radius: 8px;
+}
+
+/* User Stories */
+.artifact-item.user-stories {
+  background-color: #d8dcff;
+  border: 1px solid #d8dcff;
+  color: #333;
+  border-radius: 8px;
+}
+
+/* Tasks */
+.artifact-item.tasks {
+  background-color: #ffe7cb;
+  border: 1px solid #ffe7cb;
+  color: #333;
+  border-radius: 8px;
+}
+
+
+
+/* Results Viewer */
+.results-viewer {
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+}
+
+.results-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Button Container */
+.button-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+/* Plain Text View */
+.plain-text-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.artifact-card {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.artifact-title {
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  color: #333;
+}
+
+.artifact-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #555;
+  margin: 0;
+  background-color: transparent; /* Remove the white background */
+  border: none; /* Remove border from pre */
+}
+
+/* JSON Tree View */
+.json-tree-view {
+  padding: 20px;
+}
+
+.json-content {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+}
+
+/* Export Buttons */
+.export-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.export-button {
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.export-text {
+  background-color: #28a745;
+}
+
+.export-text:hover {
+  background-color: #218838;
+}
+
+.export-json {
+  background-color: #17a2b8;
+}
+
+.export-json:hover {
+  background-color: #138496;
+}
+
+.reset-button {
+  background-color: #dc3545;
+}
+
+.reset-button:hover {
+  background-color: #c82333;
+}
