@@ -1,70 +1,148 @@
-# Getting Started with Create React App
+# ViBE (Visual Backlog Extractor) 🚀
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+ViBE is a lightweight tool designed to assist in backlog creation by analyzing app mockups and automatically generating actionable backlog items such as **functional requirements**, **epics**, **user stories**, and **tasks**. 
 
-## Available Scripts
+## Key Features
+- **Upload App Mockups**: Easily upload multiple app screenshots or designs.
+- **AI-Powered Backlog Generation**: Automatically generates detailed backlog items, including:
+  - Functional Requirements
+  - Epics
+  - User Stories
+  - Tasks
+- **Step-by-Step Workflow**: Generates backlog items sequentially, where each artifact depends on the previous one.
+- **Editable Artifacts**: Manually refine generated items before saving.
+- **Export Options**: Export results in text or JSON formats.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Screenshots
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Upload Mockups
+* Upload Mockups Screen
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Generate Backlog Artifacts
+* Generate Backlog Artifacts Screen
 
-### `npm test`
+### Results Viewer
+* Results Viewer Screen
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- **Node.js** (v16+)
+- **npm** (v8+)
+- **Python** (if you plan to extend Python-based functionality)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Backend Setup
+1. Navigate to the backend folder:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file with your OpenAI API key:
+   ```plaintext
+   OPENAI_API_KEY=your_openai_api_key
+   ```
+4. Start the backend server:
+   ```bash
+   npm start
+   ```
+   The backend will run at `http://localhost:5000`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Frontend Setup
+1. Navigate to the frontend folder:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the frontend development server:
+   ```bash
+   npm start
+   ```
+   The frontend will run at `http://localhost:3000`.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Usage
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Step 1: Upload Mockups
+- Upload app mockups and provide a brief project description.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Step 2: Generate Backlog Artifacts
+- Follow the step-by-step workflow to generate:
+  1. Functional Requirements
+  2. Epics
+  3. User Stories
+  4. Tasks
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Step 3: Review and Export
+- View generated results in either plain text or a JSON tree structure.
+- Edit and save artifacts as needed.
+- Export the backlog as a `.txt` or `.json` file.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+project/
+│
+├── backend/                  # Backend code (Node.js)
+│   ├── server.js             # Express server logic
+│   ├── prompts.js            # AI prompts for backlog generation
+│   └── .env                  # API key configuration
+│
+├── frontend/                 # Frontend code (React)
+│   ├── src/
+│   │   ├── App.js            # Main application logic
+│   │   ├── components/       # React components (e.g., MockupUploader, ResultsViewer)
+│   │   └── App.css           # Styling for the application
+│   ├── public/               # Static files (e.g., index.html)
+│   └── package.json          # Frontend dependencies
+│
+├── .gitignore                # Ignored files for version control
+├── README.md                 # Project documentation
+└── requirements.txt          # Python dependencies (if applicable)
+```
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Contributing
 
-### Analyzing the Bundle Size
+We welcome contributions to improve ViBE! If you'd like to contribute:
+1. Fork the repository.
+2. Create a feature branch:
+   ```bash
+   git checkout -b feature/your-feature
+   ```
+3. Commit your changes and push them:
+   ```bash
+   git push origin feature/your-feature
+   ```
+4. Create a Pull Request on GitHub.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Acknowledgements
 
-### Deployment
+- Built with React, Node.js, and OpenAI's API.
+- Inspired by the need to simplify requirements engineering for agile teams.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+Feel free to reach out if you have any questions or feedback! 🚀
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
