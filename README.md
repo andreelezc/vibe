@@ -28,12 +28,9 @@ ViBE is a lightweight tool designed to assist in backlog creation by analyzing a
 
 ---
 
-## Installation
-
 ### Prerequisites
 - **Node.js** (v16+)
 - **npm** (v8+)
-- **Python** (if you plan to extend Python-based functionality)
 
 ### Backend Setup
 1. Navigate to the backend folder:
@@ -44,7 +41,7 @@ ViBE is a lightweight tool designed to assist in backlog creation by analyzing a
    ```bash
    npm install
    ```
-3. Create a `.env` file with your OpenAI API key:
+3. Create a `.env` file at the root with your OpenAI API key:
    ```plaintext
    OPENAI_API_KEY=your_openai_api_key
    ```
@@ -55,9 +52,9 @@ ViBE is a lightweight tool designed to assist in backlog creation by analyzing a
    The backend will run at `http://localhost:5000`.
 
 ### Frontend Setup
-1. Navigate to the frontend folder:
+1. Navigate to the root folder:
    ```bash
-   cd frontend
+   cd vibe
    ```
 2. Install dependencies:
    ```bash
