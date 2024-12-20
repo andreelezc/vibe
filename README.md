@@ -17,14 +17,14 @@ ViBE is a lightweight tool designed to assist in backlog creation by analyzing a
 
 ## Screenshots
 
-### Upload Mockups
-* Upload Mockups Screen
+### Home Screen
+![Home Screen](public/images/home_screen.png)
 
-### Generate Backlog Artifacts
-* Generate Backlog Artifacts Screen
+### Backlog Generation Screen
+![Backlog Generation](public/images/backlog_generation.png)
 
 ### Results Viewer
-* Results Viewer Screen
+![Results Viewer](public/images/results_viewer.png)
 
 ---
 
