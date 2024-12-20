@@ -139,10 +139,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Acknowledgements
 
-- Built with React, Node.js, and OpenAI's API.
-- Inspired by the need to simplify requirements engineering for agile teams.
 
 ---
-
-Feel free to reach out if you have any questions or feedback! 🚀
-
