@@ -91,28 +91,27 @@ ViBE is a lightweight tool designed to assist in backlog creation by analyzing a
 ---
 
 ## Project Structure
-
 ```
 project/
 │
 ├── backend/                  # Backend code (Node.js)
 │   ├── server.js             # Express server logic
-│   ├── prompts.js            # AI prompts for backlog generation
-│   └── .env                  # API key configuration
+│   ├── prompts.js            # Prompts for backlog generation
+│   └── package.json          # Backend dependencies
 │
-├── frontend/                 # Frontend code (React)
-│   ├── src/
-│   │   ├── App.js            # Main application logic
-│   │   ├── components/       # React components (e.g., MockupUploader, ResultsViewer)
-│   │   └── App.css           # Styling for the application
-│   ├── public/               # Static files (e.g., index.html)
-│   └── package.json          # Frontend dependencies
+├── public/                   # Static frontend assets
+│   ├── index.html            # Main HTML file
 │
-├── .gitignore                # Ignored files for version control
-├── README.md                 # Project documentation
-└── requirements.txt          # Python dependencies (if applicable)
+├── src/                      # Frontend React code
+│   ├── App.js                # Main application logic
+│   ├── components/           # React components (e.g., MockupUploader, ResultsViewer)
+│   ├── App.css               # Styling for the application
+│   └── index.js              # React entry point
+│
+├── .env                      # API key configuration
+├── package.json              # Frontend dependencies
+└── README.md                 # Project documentation
 ```
-
 ---
 
 ## Contributing
