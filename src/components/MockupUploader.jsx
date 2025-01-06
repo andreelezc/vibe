@@ -5,6 +5,7 @@ const MockupUploader = ({ setImages, setDescription }) => {
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
+    console.log('Selected Files:', files); // Log selected files
     setImages(files);
 
     // Generate thumbnail URLs
@@ -41,4 +42,3 @@ const MockupUploader = ({ setImages, setDescription }) => {
 };
 
 export default MockupUploader;
-

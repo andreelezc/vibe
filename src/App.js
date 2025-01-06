@@ -31,7 +31,7 @@ const App = () => {
   };
 
 const handleGenerate = async (type) => {
-  setLoading(true); // Start loading
+  setLoading(true); // Start loading indicator
   const backendUrl = 'http://localhost:5000'; // Backend URL
 
   const formData = new FormData();
@@ -56,6 +56,7 @@ const handleGenerate = async (type) => {
     .toLowerCase(); // Convert to lowercase
 
   try {
+    console.log(`Generating ${type}...`);
     const response = await fetch(`${backendUrl}/generate-${endpoint}`, {
       method: 'POST',
       body: formData,
@@ -65,16 +66,34 @@ const handleGenerate = async (type) => {
       throw new Error(`API responded with status ${response.status}`);
     }
 
-    const data = await response.json();
-    setArtifacts((prev) => ({ ...prev, [type]: data })); // Update artifacts with generated result
+    // Handle plain text responses correctly
+    const data = await response.text(); // Use .text() for plain text responses
+    console.log(`Generated ${type}:`, data);
+
+    // Update frontend state with the generated artifact
+    setArtifacts((prev) => ({ ...prev, [type]: data }));
+
+    // Automatically save generated artifact to the backend
+    const saveResponse = await fetch(`${backendUrl}/save-artifact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, content: data }),
+    });
+
+    if (!saveResponse.ok) {
+      throw new Error(`Failed to save ${type} to the backend`);
+    }
+
+    console.log(`${type} saved successfully on the backend.`);
     return data; // Return the generated artifact
   } catch (error) {
-    console.error(`Error generating ${type}:`, error);
+    console.error(`Error generating ${type}:`, error.message);
     return ''; // Return an empty string if the API fails
   } finally {
-    setLoading(false); // Stop loading
+    setLoading(false); // Stop loading indicator
   }
 };
+
 
 
 

@@ -7,8 +7,23 @@ const EditableTextField = ({ type, value, onSave }) => {
     setText(event.target.value);
   };
 
-  const handleSaveClick = () => {
-    onSave(type, text);
+  const handleSaveClick = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/save-artifact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, content: text }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save ${type}`);
+      }
+
+      console.log(`${type} saved successfully.`);
+      onSave(type, text); // Update frontend state with saved content
+    } catch (error) {
+      console.error(`Error saving ${type}:`, error.message);
+    }
   };
 
   return (
@@ -20,3 +35,4 @@ const EditableTextField = ({ type, value, onSave }) => {
 };
 
 export default EditableTextField;
+

@@ -23,9 +23,11 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
   const generateArtifact = async (type) => {
     setLoading((prev) => ({ ...prev, [type]: true }));
     try {
-      const result = await handleGenerate(type);
-      setGeneratedResults((prev) => ({ ...prev, [type]: result }));
-      setExpanded((prev) => ({ ...prev, [type]: true }));
+      console.log(`Generating ${type}...`);
+      const result = await handleGenerate(type); // Fetch plain text
+      console.log(`Generated ${type}:`, result);
+      setGeneratedResults((prev) => ({ ...prev, [type]: result })); // Store the result
+      setExpanded((prev) => ({ ...prev, [type]: true })); // Expand the section
     } catch (error) {
       console.error(`Failed to generate ${type}:`, error);
     } finally {
@@ -40,12 +42,32 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
     return false;
   };
 
+  const saveArtifact = async (type, content) => {
+  try {
+    const response = await fetch('http://localhost:5000/save-artifact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, content }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to save ${type}`);
+    }
+
+    console.log(`${type} saved successfully.`);
+    setGeneratedResults((prev) => ({ ...prev, [type]: content })); // Update frontend state
+  } catch (error) {
+    console.error(`Error saving ${type}:`, error.message);
+  }
+};
+
+
   return (
     <div className="collapsible-list">
       {Object.keys(artifacts).map((type) => (
         <div
           key={type}
-          className={`artifact-item ${type.replace(/([A-Z])/g, '-$1').toLowerCase()}`} // Add a static class based on type
+          className={`artifact-item ${type.replace(/([A-Z])/g, '-$1').toLowerCase()}`}
         >
           <div className="artifact-header">
             <span>{`${type.replace(/([A-Z])/g, ' $1')}`}</span>
@@ -61,7 +83,7 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
           {expanded[type] && (
             <div className="artifact-content">
               <textarea
-                value={generatedResults[type] || artifacts[type]}
+                value={generatedResults[type] || artifacts[type] || ''}
                 onChange={(e) =>
                   setGeneratedResults((prev) => ({
                     ...prev,
@@ -77,12 +99,12 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
                   {isEditable[type] ? 'Cancel Edit' : 'Edit'}
                 </button>
                 <button
-                  className="save-button"
-                  onClick={() => {
-                    alert(`${type} saved successfully!`);
-                    toggleEditable(type);
-                  }}
-                  disabled={!generatedResults[type]}
+                    className="save-button"
+                    onClick={() => {
+                      saveArtifact(type, generatedResults[type]); // Save the edited content
+                      toggleEditable(type); // Disable edit mode
+                    }}
+                    disabled={!generatedResults[type]} // Disable Save if no content
                 >
                   Save
                 </button>
