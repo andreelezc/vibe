@@ -410,3 +410,28 @@ input[type="file"]:focus {
 .reset-button:hover {
   background-color: #c82333;
 }
+
+/* JSON Tree View */
+.json-tree-view {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.json-tree-view ul {
+  padding-left: 20px;
+}
+
+.json-tree-view li {
+  margin-bottom: 10px;
+}
+
+.json-tree-view button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  color: #007bff;
+  text-decoration: underline;
+}

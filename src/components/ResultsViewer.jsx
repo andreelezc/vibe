@@ -20,11 +20,101 @@ const PlainTextView = ({ artifacts }) => {
   );
 };
 
+const parseArtifactsToTree = (artifacts) => {
+  const tree = {};
+
+  // Parse Epics
+  artifacts.epics?.split('\n').forEach((epic) => {
+    const [id, description] = epic.split(':');
+    if (id && description) {
+      tree[id.trim()] = { id: id.trim(), description: description.trim(), children: {} };
+    }
+  });
+
+  // Parse User Stories
+  artifacts.userStories?.split('\n').forEach((story) => {
+    const match = story.match(/E(\d+)\sUS(\d+):\s(.*)/);
+    if (match) {
+      const [_, epicId, storyId, description] = match;
+      const epicKey = `E${epicId}`;
+      const storyKey = `US${storyId}`;
+      if (tree[epicKey]) {
+        tree[epicKey].children[storyKey] = { id: storyKey, description: description.trim(), children: {} };
+      }
+    }
+  });
+
+  // Parse Tasks
+  artifacts.tasks?.split('\n').forEach((task) => {
+    const match = task.match(/E(\d+),\sUS(\d+),\sT(\d+):\s(.*)/);
+    if (match) {
+      const [_, epicId, storyId, taskId, description] = match;
+      const epicKey = `E${epicId}`;
+      const storyKey = `US${storyId}`;
+      const taskKey = `T${taskId}`;
+      if (tree[epicKey]?.children[storyKey]) {
+        tree[epicKey].children[storyKey].children[taskKey] = { id: taskKey, description: description.trim() };
+      }
+    }
+  });
+
+  return tree;
+};
+
+const RenderTree = ({ node }) => {
+  if (!node) return null;
+
+  return (
+    <ul style={{ listStyleType: 'none', paddingLeft: '20px' }}>
+      {Object.entries(node).map(([key, value]) => (
+        <TreeNode key={key} node={value} />
+      ))}
+    </ul>
+  );
+};
+
+const TreeNode = ({ node }) => {
+  const [isExpanded, setIsExpanded] = useState(true); // Default to expanded
+
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+  return (
+    <li style={{ marginBottom: '10px' }}>
+      <div>
+        {node.children ? (
+          <button
+            onClick={toggleExpand}
+            style={{
+              cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              color: '#007bff',
+              textDecoration: 'underline',
+              marginRight: '5px',
+            }}
+          >
+            {isExpanded ? '[-]' : '[+]'}
+          </button>
+        ) : (
+          '•'
+        )}
+        <strong>{node.id}:</strong> {node.description}
+      </div>
+      {isExpanded && node.children && <RenderTree node={node.children} />}
+    </li>
+  );
+};
+
 const JSONTreeView = ({ artifacts }) => {
+  const tree = parseArtifactsToTree(artifacts);
+
   return (
     <div className="json-tree-view">
-      <h3>JSON Tree View</h3>
-      <pre className="json-content">{JSON.stringify(artifacts, null, 2)}</pre>
+      <RenderTree node={tree} />
     </div>
   );
 };
@@ -39,7 +129,8 @@ const exportResults = (artifacts, format) => {
       .join('\n');
     fileName = 'results.txt';
   } else if (format === 'json') {
-    content = JSON.stringify(artifacts, null, 2);
+    const tree = parseArtifactsToTree(artifacts); // Convert artifacts to tree structure
+    content = JSON.stringify(tree, null, 2); // Export tree structure
     fileName = 'results.json';
   }
 
