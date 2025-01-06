@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
+const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
   const [expanded, setExpanded] = useState({});
   const [generatedResults, setGeneratedResults] = useState({});
   const [loading, setLoading] = useState({});
@@ -42,26 +42,6 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
     return false;
   };
 
-  const saveArtifact = async (type, content) => {
-  try {
-    const response = await fetch('http://localhost:5000/save-artifact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, content }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to save ${type}`);
-    }
-
-    console.log(`${type} saved successfully.`);
-    setGeneratedResults((prev) => ({ ...prev, [type]: content })); // Update frontend state
-  } catch (error) {
-    console.error(`Error saving ${type}:`, error.message);
-  }
-};
-
-
   return (
     <div className="collapsible-list">
       {Object.keys(artifacts).map((type) => (
@@ -99,12 +79,14 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate }) => {
                   {isEditable[type] ? 'Cancel Edit' : 'Edit'}
                 </button>
                 <button
-                    className="save-button"
-                    onClick={() => {
-                      saveArtifact(type, generatedResults[type]); // Save the edited content
-                      toggleEditable(type); // Disable edit mode
-                    }}
-                    disabled={!generatedResults[type]} // Disable Save if no content
+                  className="save-button"
+                  onClick={() => {
+                    if (generatedResults[type]) {
+                      handleSave(type, generatedResults[type]); // Save the content
+                    }
+                    toggleEditable(type); // Exit edit mode
+                  }}
+                  disabled={!generatedResults[type]} // Disable Save if no content
                 >
                   Save
                 </button>
