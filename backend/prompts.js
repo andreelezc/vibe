@@ -6,7 +6,7 @@ module.exports = {
   `,
   // Persona Prompt
   personaPrompt: `
-    Consider the following group of mockups from an app. Identify the potential user personas and roles using the provided 
+    Consider the following group of mockups from an app. Identify 2 potential user personas and roles using the provided 
     JSON template:
 
     {

@@ -310,7 +310,10 @@ input[type="file"]:focus {
   padding: 20px;
   font-family: "Arial", sans-serif;
   line-height: 1.6;
+  /*/*max-width: 800px; !* Center viewer and limit its width *!*!*/
+  /*margin: 0 auto; !* Center horizontally *!*/
 }
+
 
 .results-title {
   text-align: center;
@@ -339,16 +342,23 @@ input[type="file"]:focus {
 /* Plain Text View */
 .plain-text-view {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjust the first value for card width */
   gap: 20px;
   padding: 20px;
 }
+
+
 
 .artifact-card {
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #333;
+  background-color: #ffffff; /* White background */
+  max-height: 250px; /* Limit card height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  word-wrap: break-word; /* Ensure long text wraps */
 }
 
 .artifact-title {
@@ -363,8 +373,26 @@ input[type="file"]:focus {
   color: #555;
   margin: 0;
   background-color: transparent; /* Remove the white background */
-  border: none; /* Remove border from pre */
+  border: none; /* Remove border */
+  word-wrap: break-word; /* Ensure long words wrap */
+  white-space: pre-wrap; /* Wrap text and respect whitespace/line breaks */
+  overflow-y: auto; /* Allow vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
+
+
+.artifact-content textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0; /* Add top and bottom spacing for better separation */
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  resize: none;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a slight shadow for better visibility */
+}
+
 
 /* JSON Tree View */
 .json-tree-view {
@@ -391,10 +419,11 @@ input[type="file"]:focus {
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  margin-right: 10px;
+  margin: 5px; /* Add spacing between buttons */
   transition: all 0.3s ease;
   color: white;
 }
+
 
 .export-text {
   background-color: #28a745;
@@ -422,13 +451,20 @@ input[type="file"]:focus {
 
 /* JSON Tree View */
 .json-tree-view {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
+  padding: 20px;
+  background-color: #ffffff; /* White background */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  color: #333; /* Text color */
+  max-height: 80vh; /* Limit height to 80% of the viewport */
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  margin: 20px auto; /* Add spacing and center it */
 }
 
+
+
 .json-tree-view ul {
-  padding-left: 20px;
+  padding-left: 20px; /* Indent list items */
 }
 
 .json-tree-view li {
@@ -444,6 +480,11 @@ input[type="file"]:focus {
   color: #007bff;
   text-decoration: underline;
 }
+
+.json-tree-view button:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
 
 .step-title {
   color: rgb(2, 0, 36);
