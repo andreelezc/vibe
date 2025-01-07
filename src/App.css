@@ -1,9 +1,21 @@
 /* General styles */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f8f9fa;
+  font-family: "RobotoRegular";
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(13, 29, 99, 1) 47%,
+    rgba(2, 0, 36, 1) 100%
+  );
   margin: 0;
   padding: 0;
+}
+
+@font-face {
+  font-family: "RobotoRegular";
+  src: local("RobotoRegular"),
+    url(./fonts/Roboto-Regular.ttf) format("truetype");
 }
 
 .app-container {
@@ -17,10 +29,13 @@ body {
   width: 100%;
   max-width: 800px;
   background: #ffffff;
-  padding: 20px;
+  padding: 3rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
+  box-shadow: -1px 2px 90px 0px rgba(0, 0, 0, 0.75);
+  -webkit-box-shadow: -1px 2px 90px 0px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: -1px 2px 90px 0px rgba(0, 0, 0, 0.75);
 }
 
 .title {
@@ -53,7 +68,7 @@ input[type="file"]:focus {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 10px; /* Space between thumbnails and the file input */
+  margin: 1.5rem 0; /* Space between thumbnails and the file input */
 }
 
 .thumbnail {
@@ -66,7 +81,7 @@ input[type="file"]:focus {
 
 /* Next Button */
 .button {
-  background-color: #007bff;
+  background-color: #020024;
   color: #ffffff;
   border: none;
   padding: 10px 15px;
@@ -112,6 +127,7 @@ input[type="file"]:focus {
   border: 1px solid #ced4da;
   border-radius: 8px;
   overflow: hidden;
+  color: #fff;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -125,14 +141,14 @@ input[type="file"]:focus {
   font-size: 16px;
   font-weight: bold; /* Make text bold */
   text-transform: capitalize; /* Capitalize artifact names */
-  color: #333; /* Make it darker for better readability */
+  color: #fff; /* Make it darker for better readability */
   background-color: transparent; /* Match card background */
 }
 
 /* Buttons inside Header */
 .header-button {
-  background: #ddecf1; /* Gray button background */
-  color: #262323;
+  background: #fff; /* Gray button background */
+  color: #020024;
   border: none;
   padding: 8px 12px;
   font-size: 14px;
@@ -142,8 +158,8 @@ input[type="file"]:focus {
 }
 
 .header-button:hover {
-  background: #5a6268; /* Slightly darker gray on hover */
-  color: white;
+  background: #fff; /* Gray button background */
+  color: #020024;
 }
 
 .header-button.disabled {
@@ -160,7 +176,7 @@ input[type="file"]:focus {
 
 /* Next Button */
 .button {
-  background-color: #007bff;
+  background-color: #020024;
   color: #ffffff;
   border: none;
   padding: 10px 15px;
@@ -173,10 +189,8 @@ input[type="file"]:focus {
 }
 
 .button:hover {
-  background-color: #0056b3;
+  background-color: #16134d;
 }
-
-
 
 /* Spinner */
 .spinner {
@@ -261,49 +275,47 @@ input[type="file"]:focus {
 
 /* Functional Requirements */
 .artifact-item.functional-requirements {
-  background-color: #f9ddf0;
-  border: 1px solid #f9ddf0;
-  color: #333;
+  background-color: #020024;
+  border: 1px solid #020024;
+  color: #fff;
   border-radius: 8px;
 }
 
 /* Epics */
 .artifact-item.epics {
-  background-color: #fec6b7;
-  border: 1px solid #fec6b7;
-  color: #333;
+  background-color: #020024;
+  border: 1px solid #020024;
+  color: #fff;
   border-radius: 8px;
 }
 
 /* User Stories */
 .artifact-item.user-stories {
-  background-color: #d8dcff;
-  border: 1px solid #d8dcff;
-  color: #333;
+  background-color: #020024;
+  border: 1px solid #020024;
+  color: #fff;
   border-radius: 8px;
 }
 
 /* Tasks */
 .artifact-item.tasks {
-  background-color: #ffe7cb;
-  border: 1px solid #ffe7cb;
-  color: #333;
+  background-color: #020024;
+  border: 1px solid #020024;
+  color: #fff;
   border-radius: 8px;
 }
-
-
 
 /* Results Viewer */
 .results-viewer {
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   line-height: 1.6;
 }
 
 .results-title {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #fff;
 }
 
 /* Button Container */
@@ -313,18 +325,15 @@ input[type="file"]:focus {
 }
 
 .toggle-button {
-  background-color: #007bff;
-  color: white;
+  background-color: #fff;
+  color: #020024;
+  font-weight: bold;
   border: none;
   padding: 10px 15px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s ease;
-}
-
-.toggle-button:hover {
-  background-color: #0056b3;
 }
 
 /* Plain Text View */
@@ -434,4 +443,22 @@ input[type="file"]:focus {
   font-weight: bold;
   color: #007bff;
   text-decoration: underline;
+}
+
+.step-title {
+  color: rgb(2, 0, 36);
+  font-size: 1.2rem;
+  margin: 3rem 0 0;
+}
+
+.circle-number {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(2, 0, 36);
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-weight: bold;
 }

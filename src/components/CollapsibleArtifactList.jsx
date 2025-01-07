@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
   const [expanded, setExpanded] = useState({});
@@ -36,24 +36,35 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
   };
 
   const isDisabled = (type) => {
-    if (type === 'epics') return !artifacts.functionalRequirements;
-    if (type === 'userStories') return !artifacts.epics;
-    if (type === 'tasks') return !artifacts.userStories;
+    if (type === "epics") return !artifacts.functionalRequirements;
+    if (type === "userStories") return !artifacts.epics;
+    if (type === "tasks") return !artifacts.epics;
     return false;
   };
 
   return (
     <div className="collapsible-list">
+      <h2 className="step-title">
+        <span className="circle-number">2</span>
+        &nbsp;Generate Backlog Artifacts
+      </h2>
+      <p className="screen-description" style={{ textAlign: "left"}}>
+        Follow the step-by-step process to generate backlog items. Start by
+        generating functional requirements, then move on to epics, user stories,
+        and tasks. Each step depends on the results of the previous one.
+      </p>
       {Object.keys(artifacts).map((type) => (
         <div
           key={type}
-          className={`artifact-item ${type.replace(/([A-Z])/g, '-$1').toLowerCase()}`}
+          className={`artifact-item ${type
+            .replace(/([A-Z])/g, "-$1")
+            .toLowerCase()}`}
         >
           <div className="artifact-header">
-            <span>{`${type.replace(/([A-Z])/g, ' $1')}`}</span>
+            <span>{`${type.replace(/([A-Z])/g, " $1")}`}</span>
             {loading[type] && <div className="spinner"></div>}
             <button
-              className={`header-button ${isDisabled(type) ? 'disabled' : ''}`}
+              className={`header-button ${isDisabled(type) ? "disabled" : ""}`}
               onClick={() => !isDisabled(type) && generateArtifact(type)}
               disabled={isDisabled(type) || loading[type]}
             >
@@ -63,7 +74,7 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
           {expanded[type] && (
             <div className="artifact-content">
               <textarea
-                value={generatedResults[type] || artifacts[type] || ''}
+                value={generatedResults[type] || artifacts[type] || ""}
                 onChange={(e) =>
                   setGeneratedResults((prev) => ({
                     ...prev,
@@ -75,8 +86,11 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
                 placeholder="Generated content will appear here..."
               />
               <div className="artifact-actions">
-                <button className="edit-button" onClick={() => toggleEditable(type)}>
-                  {isEditable[type] ? 'Cancel Edit' : 'Edit'}
+                <button
+                  className="edit-button"
+                  onClick={() => toggleEditable(type)}
+                >
+                  {isEditable[type] ? "Cancel Edit" : "Edit"}
                 </button>
                 <button
                   className="save-button"

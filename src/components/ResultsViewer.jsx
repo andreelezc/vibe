@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 
 const PlainTextView = ({ artifacts }) => {
   const colors = {
-    functionalRequirements: '#F9DDF0',
-    epics: '#FEC6B7',
-    userStories: '#D8DCFF',
-    tasks: '#FFE7CB',
+    functionalRequirements: '#fff',
+    epics: '#fff',
+    userStories: '#fff',
+    tasks: '#fff',
   };
 
   return (
