@@ -83,6 +83,9 @@ const CollapsibleArtifactList = ({ artifacts, handleGenerate, handleSave }) => {
                 }
                 rows="6"
                 disabled={!isEditable[type]}
+                style={{
+                  width:"95%"
+                }}
                 placeholder="Generated content will appear here..."
               />
               <div className="artifact-actions">

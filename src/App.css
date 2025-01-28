@@ -20,8 +20,9 @@ body {
 
 .app-container {
   display: flex;
-  flex-direction: column;
+  height: 80vh;
   align-items: center;
+  justify-content: center;
   padding: 20px;
 }
 
@@ -84,7 +85,7 @@ input[type="file"]:focus {
   background-color: #020024;
   color: #ffffff;
   border: none;
-  padding: 10px 15px;
+  padding: 10px 30px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -179,7 +180,7 @@ input[type="file"]:focus {
   background-color: #020024;
   color: #ffffff;
   border: none;
-  padding: 10px 15px;
+  padding: 10px 30px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;

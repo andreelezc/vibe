@@ -132,6 +132,9 @@ const App = () => {
           />
           <button
             className="button"
+            style={{
+              backgroundColor: images.length === 0 || description.length === 0 ? 'grey' : 'black'
+            }}
             disabled={images.length === 0 || description.length === 0}
             onClick={nextScreen}
           >
@@ -154,6 +157,13 @@ const App = () => {
           <button
             className="button"
             onClick={nextScreen}
+            style={{
+              backgroundColor: loading ||
+              !artifacts.functionalRequirements ||
+              !artifacts.epics ||
+              !artifacts.userStories ||
+              !artifacts.tasks ? 'grey' : 'black'
+            }}
             disabled={
               loading ||
               !artifacts.functionalRequirements ||
