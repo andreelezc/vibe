@@ -19,22 +19,29 @@ app.use(express.json());
 // Import prompts
 const prompts = require('./prompts');
 
-// Helper to process images (resize, compress, and encode to Base64)
+// Helper to process images
 const processImages = async (files) => {
   try {
     return await Promise.all(
       files.map(async (file) => {
         const filePath = path.join(__dirname, file.path);
-        console.log('Processing file:', filePath); // Log file being processed
+        console.log('Processing file:', filePath, 'MIME Type:', file.mimetype);
 
+        // Convert to JPEG format
         const processedBuffer = await sharp(filePath)
-          .resize({ width: 500 }) // Resize to a maximum width of 500px
-          .jpeg({ quality: 80 }) // Convert to JPEG
+          .toFormat('jpeg') // Convert all images to JPEG
+          .resize({ width: 500 }) // Resize for optimization
+          .jpeg({ quality: 80 }) // Adjust quality
           .toBuffer();
 
-        console.log('Processed Image Format: JPEG');
-        console.log('Processed Base64 Image:', processedBuffer.toString('base64').slice(0, 100)); // Log partial Base64
-        return processedBuffer.toString('base64');
+        const base64String = processedBuffer.toString('base64');
+
+        console.log('Processed Image (Base64) Preview:', base64String.slice(0, 100)); // Debug first 100 chars
+
+        return {
+          type: 'image_url',
+          image_url: { url: `data:image/jpeg;base64,${base64String}` } // Properly formatted Base64 URL
+        };
       })
     );
   } catch (error) {
@@ -43,15 +50,14 @@ const processImages = async (files) => {
   }
 };
 
-
-// Helper to call the LLM API
+// Helper to call OpenAI API
 const callLLMAPI = async (messages) => {
   try {
     console.log('Payload sent to LLM API:', JSON.stringify(messages, null, 2));
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o',
         messages,
         temperature: 0,
         max_tokens: 2048,
@@ -73,7 +79,7 @@ const callLLMAPI = async (messages) => {
   }
 };
 
-// Helper to parse JSON responses (for Personas and Scene Graphs)
+// Helper to parse JSON responses (for Scene Graphs and Personas)
 const parseJSONResponse = (response) => {
   try {
     const cleanJSON = response.replace(/```(?:json)?/g, '').trim(); // Clean markdown syntax
@@ -87,7 +93,8 @@ const parseJSONResponse = (response) => {
 
 // Helper to generate Personas (JSON Response)
 const generatePersonas = async (files) => {
-  const images = await processImages(files);
+  const images = await processImages(files); // Process all uploaded images
+
 
   const messages = [
     {
@@ -96,13 +103,10 @@ const generatePersonas = async (files) => {
     },
     {
       role: 'user',
-      content: JSON.stringify([
+      content: [
         { type: 'text', text: prompts.personaPrompt },
-        ...images.map((image) => ({
-          type: 'image_base64',
-          image_base64: { data: image },
-        })),
-      ]),
+        ...images  // Corrected to send `image_url`
+      ],
     },
   ];
 
@@ -113,7 +117,7 @@ const generatePersonas = async (files) => {
 
 // Helper to generate Scene Graphs (JSON Response)
 const generateSceneGraph = async (files) => {
-  const images = await processImages(files);
+  const images = await processImages(files); // Process all uploaded images
 
   const messages = [
     {
@@ -122,13 +126,10 @@ const generateSceneGraph = async (files) => {
     },
     {
       role: 'user',
-      content: JSON.stringify([
+      content: [
         { type: 'text', text: prompts.ccotSceneGraphPrompt },
-        ...images.map((image) => ({
-          type: 'image_base64',
-          image_base64: { data: image },
-        })),
-      ]),
+        ...images  // Corrected to send `image_url`
+      ],
     },
   ];
 
@@ -171,7 +172,7 @@ const loadSavedArtifact = (type) => {
 };
 
 // Endpoint to generate Functional Requirements (Plain Text)
-app.post('/generate-functional-requirements', upload.array('images', 6), async (req, res) => {
+app.post('/generate-functional-requirements', upload.array('images'), async (req, res) => {
   console.log('Starting Functional Requirements Generation...');
   const files = req.files;
 
@@ -192,14 +193,14 @@ app.post('/generate-functional-requirements', upload.array('images', 6), async (
   try {
     console.log('Step 1: Processing Images...');
     const images = await processImages(files);
-    console.log('Processed Images:', images);
+    console.log(`Processed ${images.length} images successfully.`);
 
     console.log('Step 2: Generating Personas...');
     const personas = await generatePersonas(files);
     console.log('Generated Personas:', JSON.stringify(personas, null, 2));
 
     // Save Personas to backend
-    saveGeneratedArtifact('personas', JSON.stringify(personas, null, 2)); // Save as JSON for readability
+    saveGeneratedArtifact('personas', JSON.stringify(personas, null, 2));
 
     console.log('Step 3: Preparing Messages...');
     const messages = [
@@ -210,14 +211,8 @@ app.post('/generate-functional-requirements', upload.array('images', 6), async (
       {
         role: 'user',
         content: [
-          {
-            type: 'text',
-            text: prompts.personaFRPrompt,
-          },
-          ...images.map((image) => ({
-            type: 'image_url',
-            image_url: { url: `data:image/jpeg;base64,${image}` },
-          })),
+          { type: 'text', text: prompts.personaFRPrompt },
+          ...images,
         ],
       },
       {
@@ -231,11 +226,11 @@ app.post('/generate-functional-requirements', upload.array('images', 6), async (
     const results = await callLLMAPI(messages);
     console.log('LLM API Response:', results);
 
-    // Automatically save the generated Functional Requirements
+    // Save the generated Functional Requirements
     saveGeneratedArtifact('functionalRequirements', results);
 
     console.log('Step 5: Cleaning Up...');
-    files.forEach((file) => fs.unlinkSync(file.path)); // Clean up
+    files.forEach((file) => fs.unlinkSync(file.path));
 
     console.log('Step 6: Sending Response...');
     res.send(results);
@@ -245,65 +240,9 @@ app.post('/generate-functional-requirements', upload.array('images', 6), async (
   }
 });
 
-// TEST ENDPOINT FOR IMAGES
-// app.post('/generate-functional-requirements', upload.array('images', 6), async (req, res) => {
-//   console.log('Starting Image Description Test...');
-//   const files = req.files;
-//
-//   if (!files || files.length === 0) {
-//     return res.status(400).json({ error: 'No images were uploaded.' });
-//   }
-//
-//   // Validate supported formats
-//   const supportedFormats = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
-//   const invalidFiles = files.filter((file) => !supportedFormats.includes(file.mimetype));
-//   if (invalidFiles.length > 0) {
-//     console.error('Unsupported image format:', invalidFiles.map((file) => file.originalname));
-//     return res.status(400).json({
-//       error: 'One or more uploaded files have an unsupported format. Supported formats are png, jpeg, gif, and webp.',
-//     });
-//   }
-//
-//   try {
-//     console.log('Step 1: Processing Images...');
-//     const images = await processImages(files);
-//     console.log('Processed Images:', images);
-//
-//     console.log('Step 2: Preparing Messages...');
-//     const messages = [
-//       {
-//         role: 'user',
-//         content: [
-//           {
-//             type: 'text',
-//             text: 'What is in this image?',
-//           },
-//           ...images.map((image) => ({
-//             type: 'image_url',
-//             image_url: { url: `data:image/jpeg;base64,${image}` },
-//           })),
-//         ],
-//       },
-//     ];
-//     console.log('Prepared Messages:', JSON.stringify(messages, null, 2));
-//
-//     console.log('Step 3: Calling LLM API...');
-//     const results = await callLLMAPI(messages);
-//     console.log('LLM API Response:', results);
-//
-//     console.log('Step 4: Cleaning Up...');
-//     files.forEach((file) => fs.unlinkSync(file.path)); // Clean up
-//
-//     console.log('Step 5: Sending Response...');
-//     res.send(results);
-//   } catch (error) {
-//     console.error('Error during Image Description Test:', error.message);
-//     res.status(500).send('Failed to describe images');
-//   }
-// });
 
-// Endpoint to generate Epics
-app.post('/generate-epics', upload.array('images', 6), async (req, res) => {
+// Endpoint to generate Epics (Plain Text)
+app.post('/generate-epics', upload.array('images'), async (req, res) => {
   console.log('Starting Epics Generation...');
   const files = req.files;
 
@@ -324,14 +263,14 @@ app.post('/generate-epics', upload.array('images', 6), async (req, res) => {
   try {
     console.log('Step 1: Processing Images...');
     const images = await processImages(files);
-    console.log('Processed Images:', images);
+    console.log(`Processed ${images.length} images successfully.`);
 
     console.log('Step 2: Generating Scene Graph...');
     const sceneGraph = await generateSceneGraph(files);
     console.log('Generated Scene Graph:', JSON.stringify(sceneGraph, null, 2));
 
     // Save Scene Graph to backend
-    saveGeneratedArtifact('sceneGraph', JSON.stringify(sceneGraph, null, 2)); // Save as JSON for readability
+    saveGeneratedArtifact('sceneGraph', JSON.stringify(sceneGraph, null, 2));
 
     console.log('Step 3: Preparing Messages...');
     const messages = [
@@ -342,14 +281,8 @@ app.post('/generate-epics', upload.array('images', 6), async (req, res) => {
       {
         role: 'user',
         content: [
-          {
-            type: 'text',
-            text: prompts.ccotEpicsPrompt,
-          },
-          ...images.map((image) => ({
-            type: 'image_url',
-            image_url: { url: `data:image/jpeg;base64,${image}` },
-          })),
+          { type: 'text', text: prompts.ccotEpicsPrompt },
+          ...images,
         ],
       },
       {
@@ -367,7 +300,7 @@ app.post('/generate-epics', upload.array('images', 6), async (req, res) => {
     saveGeneratedArtifact('epics', results);
 
     console.log('Step 5: Cleaning Up...');
-    files.forEach((file) => fs.unlinkSync(file.path)); // Clean up
+    files.forEach((file) => fs.unlinkSync(file.path));
 
     console.log('Step 6: Sending Response...');
     res.send(results);
@@ -377,8 +310,9 @@ app.post('/generate-epics', upload.array('images', 6), async (req, res) => {
   }
 });
 
+
 // Endpoint to generate User Stories
-app.post('/generate-user-stories', upload.array('images', 6), async (req, res) => {
+app.post('/generate-user-stories', upload.array('images'), async (req, res) => {
   console.log('Starting User Stories Generation...');
   const files = req.files;
   const epics = loadSavedArtifact('epics');
@@ -401,7 +335,7 @@ app.post('/generate-user-stories', upload.array('images', 6), async (req, res) =
   try {
     console.log('Step 1: Processing Images...');
     const images = await processImages(files);
-    console.log('Processed Images:', images);
+    console.log(`Processed ${images.length} images successfully.`);
 
     console.log('Step 2: Preparing Messages...');
     const messages = [
@@ -412,14 +346,8 @@ app.post('/generate-user-stories', upload.array('images', 6), async (req, res) =
       {
         role: 'user',
         content: [
-          {
-            type: 'text',
-            text: prompts.ccotUserStoriesPrompt,
-          },
-          ...images.map((image) => ({
-            type: 'image_url',
-            image_url: { url: `data:image/jpeg;base64,${image}` },
-          })),
+          { type: 'text', text: prompts.ccotUserStoriesPrompt },
+          ...images,
         ],
       },
       {
@@ -441,26 +369,31 @@ app.post('/generate-user-stories', upload.array('images', 6), async (req, res) =
     saveGeneratedArtifact('userStories', results);
 
     console.log('Step 4: Cleaning Up...');
-    files.forEach((file) => fs.unlinkSync(file.path)); // Clean up
+    files.forEach((file) => fs.unlinkSync(file.path)); // Remove uploaded files
 
     console.log('Step 5: Sending Response...');
     res.send(results);
   } catch (error) {
     console.error('Error generating User Stories:', error.message);
-    res.status(500).send('Failed to generate User Stories');
+    res.status(500).json({ error: 'Failed to generate User Stories' });
   }
 });
 
 
-// Endpoint to generate Tasks
-app.post('/generate-tasks', upload.array('images', 6), async (req, res) => {
+// Endpoint to generate Tasks (Plain Text, with Architectural Context)
+app.post('/generate-tasks', upload.array('images'), async (req, res) => {
   console.log('Starting Tasks Generation...');
   const files = req.files;
   const userStories = loadSavedArtifact('userStories');
   const sceneGraph = loadSavedArtifact('sceneGraph');
+  const description = req.body.description || "No description provided."; // ✅ Retrieve architectural context
 
   if (!userStories || !sceneGraph) {
     return res.status(400).json({ error: 'Missing required artifacts: User Stories or Scene Graph.' });
+  }
+
+  if (!description) {
+    console.warn("No description provided.");
   }
 
   // Validate supported formats
@@ -476,9 +409,13 @@ app.post('/generate-tasks', upload.array('images', 6), async (req, res) => {
   try {
     console.log('Step 1: Processing Images...');
     const images = await processImages(files);
-    console.log('Processed Images:', images);
+    console.log(`Processed ${images.length} images successfully.`);
 
-    console.log('Step 2: Preparing Messages...');
+    console.log('Step 2: Formatting Task Prompt with Architectural Context...');
+    const formattedTasksPrompt = `The following is the architectural context for this project:\n${description}\n\n${prompts.ccotTasksPrompt}`;
+    console.log("Formatted Tasks Prompt:", formattedTasksPrompt);
+
+    console.log('Step 3: Preparing Messages...');
     const messages = [
       {
         role: 'system',
@@ -487,45 +424,38 @@ app.post('/generate-tasks', upload.array('images', 6), async (req, res) => {
       {
         role: 'user',
         content: [
-          {
-            type: 'text',
-            text: prompts.ccotTasksPrompt,
-          },
-          ...images.map((image) => ({
-            type: 'image_url',
-            image_url: { url: `data:image/jpeg;base64,${image}` },
-          })),
+          { type: 'text', text: formattedTasksPrompt },
+          ...images,
         ],
       },
       {
         role: 'assistant',
-        content: `Scene Graph: ${sceneGraph}`, // Use provided Scene Graph
+        content: `Scene Graph: ${sceneGraph}`,
       },
       {
         role: 'assistant',
-        content: `User Stories: ${userStories}`, // Use provided User Stories
+        content: `User Stories: ${userStories}`,
       },
     ];
     console.log('Prepared Messages:', JSON.stringify(messages, null, 2));
 
-    console.log('Step 3: Calling LLM API...');
+    console.log('Step 4: Calling LLM API...');
     const results = await callLLMAPI(messages);
     console.log('LLM API Response:', results);
 
-    // Automatically save the generated Tasks
     saveGeneratedArtifact('tasks', results);
 
-    console.log('Step 4: Cleaning Up...');
-    files.forEach((file) => fs.unlinkSync(file.path)); // Clean up
+    console.log('Step 5: Cleaning Up...');
+    files.forEach((file) => fs.unlinkSync(file.path));
 
-    console.log('Step 5: Sending Response...');
+    console.log('Step 6: Sending Response...');
     res.send(results);
+
   } catch (error) {
     console.error('Error generating Tasks:', error.message);
     res.status(500).send('Failed to generate Tasks');
   }
 });
-
 
 // Test endpoint
 app.get('/test-api', async (req, res) => {
